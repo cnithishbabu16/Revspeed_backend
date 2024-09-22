@@ -12,7 +12,7 @@ env:
   DEPLOYMENT_NAME: revspeed-gke
   IMAGE: revspeed-gke-image
   TAG: 1.0.0
-  DATABASE_URL: ${{secrets.URL}}
+  DATABASE_URL: ${{secrets.DATABASE_URL}}
   DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
   DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
 
