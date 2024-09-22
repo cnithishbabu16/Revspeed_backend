@@ -15,7 +15,7 @@ env:
   DATABASE_URL: ${{secrets.DATABASE_URL}}
   DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
   DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-  REGION: us-central1(lowa)
+  REGION: us-central1
   REPOSITORY_NAME: my-repo
 
 jobs:
