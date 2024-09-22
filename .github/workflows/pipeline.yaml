@@ -77,7 +77,7 @@ jobs:
 
       - name: Deploy Image to GKE cluster
         run: |-
-          ./kustomize edit set image ${REGION}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/$IMAGE:$TAG=${REGION}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/$IMAGE:$TAG
+          ./kustomize edit set image ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${TAG}=${REGION}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/$IMAGE:$TAG
           ./kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/$DEPLOYMENT_NAME
+          kubectl rollout status deployment/${DEPLOYMENT_NAME}
           kubectl get services -o wide
