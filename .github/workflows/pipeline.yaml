@@ -61,11 +61,11 @@ jobs:
 
       - name: Include Cloud SQL Proxy in Docker Image
         run: |
-          docker build -t "${REGION}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/$IMAGE:$TAG" --build-arg CLOUD_SQL_PROXY_VERSION=1.24 .
+          docker build -t "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${TAG}" --build-arg CLOUD_SQL_PROXY_VERSION=1.24 .
 
       - name: Publish Docker Image to Artifact Registry
         run: |-
-          docker push "${REGION}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/$IMAGE:$TAG"
+          docker push "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${TAG}"
 
       - name: Set up Kustomize
         run: |-
