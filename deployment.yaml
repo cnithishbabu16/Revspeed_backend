@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: revspeed-backend
-          image: gcr.io/YOUR_PROJECT_ID/revspeed-backend-image:1.0.0
+          image: gcr.io/PROJECT_ID/IMAGE/TAG
           ports:
             - containerPort: 8080
           env:
