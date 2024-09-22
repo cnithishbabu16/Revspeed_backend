@@ -10,7 +10,7 @@ env:
   GKE_CLUSTER: cluster-1
   GKE_ZONE: us-central1-c
   DEPLOYMENT_NAME: revspeed-gke
-  IMAGE: revspeed-gke-image
+  IMAGE: backend-p1
   TAG: 1.0.0
   DATABASE_URL: ${{secrets.DATABASE_URL}}
   DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
