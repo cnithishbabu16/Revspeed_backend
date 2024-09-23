@@ -1,86 +1,3 @@
-#name: Build and Deploy to GKE
-#
-#on:
-#  push:
-#    branches:
-#      - main
-#
-#env:
-#  PROJECT_ID: ${{secrets.GKE_PROJECT}}
-#  GKE_CLUSTER: cluster-1
-#  GKE_ZONE: us-central1-c
-#  DEPLOYMENT_NAME: revspeed-gke
-#  IMAGE: revspeed-gke-image
-#  TAG: 1.0.0
-#  DATABASE_URL: ${{secrets.DATABASE_URL}}
-#  DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-#  DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-#  REGION: us-central1
-#  REPOSITORY_NAME: my-repo
-#
-#jobs:
-#  setup-build-publish-deploy:
-#    name: Setup Build Publish Deploy
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v2
-#
-#      - name: Setup JDK 17
-#        uses: actions/setup-java@v2
-#        with:
-#          distribution: 'adopt'
-#          java-version: '17'
-#
-#      - name: Build with Maven
-#        run: mvn clean package -DskipTests
-#
-#      - name: Setup Google Cloud CLI
-#        uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0.2.1
-#        env:
-#          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-#        with:
-#          service_account_key: ${{secrets.GKE_SA_KEY}}
-#          project_id: ${{secrets.GKE_PROJECT}}
-#
-#      - name: Configure Docker for Artifact Registry
-#        run: |-
-#          gcloud --quiet auth configure-docker ${REGION}-docker.pkg.dev
-#
-#      - name: Get GKE Credentials
-#        run: |-
-#          gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
-#
-#      - name: Build Docker Image
-#        run: |
-#          docker build --tag "${REGION}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/$IMAGE:$TAG" .
-#          echo "DATABASE_URL=${DATABASE_URL}" >> application.properties
-#          echo "DATABASE_USERNAME=${DATABASE_USERNAME}" >> application.properties
-#          echo "DATABASE_PASSWORD=${DATABASE_PASSWORD}" >> application.properties
-#
-#      - name: Include Cloud SQL Proxy in Docker Image
-#        run: |
-#          docker build -t "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${TAG}" --build-arg CLOUD_SQL_PROXY_VERSION=1.24 .
-#
-#      - name: Publish Docker Image to Artifact Registry
-#        run: |-
-#          docker push "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${TAG}"
-#
-#      - name: Set up Kustomize
-#        run: |-
-#          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-#          chmod u+x ./kustomize
-#
-#      - name: Install gke-gcloud-auth-plugin
-#        run: gcloud components install kubectl
-#
-#      - name: Deploy Image to GKE cluster
-#        run: |-
-#          ./kustomize edit set image ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${TAG}=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${TAG}
-#          ./kustomize build . | kubectl apply -f -
-#          kubectl rollout status deployment/${DEPLOYMENT_NAME}
-#          kubectl get services -o wide
 name: Build and Deploy to GKE
 
 on:
@@ -94,6 +11,10 @@ env:
   GKE_ZONE: us-central1-c
   DEPLOYMENT_NAME: revspeed-gke
   IMAGE: revspeed-gke-image
+  TAG: 1.0.0
+  DATABASE_URL: ${{secrets.DATABASE_URL}}
+  DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+  DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
   REGION: us-central1
   REPOSITORY_NAME: my-repo
 
@@ -117,48 +38,46 @@ jobs:
 
       - name: Setup Google Cloud CLI
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0.2.1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         with:
           service_account_key: ${{secrets.GKE_SA_KEY}}
           project_id: ${{secrets.GKE_PROJECT}}
 
       - name: Configure Docker for Artifact Registry
-        run: gcloud --quiet auth configure-docker ${REGION}-docker.pkg.dev
+        run: |-
+          gcloud --quiet auth configure-docker ${REGION}-docker.pkg.dev
 
       - name: Get GKE Credentials
-        run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+        run: |-
+          gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
 
-      - name: Build Docker Image with Cloud SQL Proxy
+      - name: Build Docker Image
         run: |
-          set -e
-          docker build -t "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${GITHUB_SHA}" --build-arg CLOUD_SQL_PROXY_VERSION=1.24 .
-        env:
-          DATABASE_URL: ${{secrets.DATABASE_URL}}
-          DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}}
-          DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          docker build --tag "${REGION}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/$IMAGE:$TAG" .
+          echo "DATABASE_URL=${DATABASE_URL}" >> application.properties
+          echo "DATABASE_USERNAME=${DATABASE_USERNAME}" >> application.properties
+          echo "DATABASE_PASSWORD=${DATABASE_PASSWORD}" >> application.properties
+
+      - name: Include Cloud SQL Proxy in Docker Image
+        run: |
+          docker build -t "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${TAG}" --build-arg CLOUD_SQL_PROXY_VERSION=1.24 .
 
       - name: Publish Docker Image to Artifact Registry
-        run: |
-          docker push "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${GITHUB_SHA}"
+        run: |-
+          docker push "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${TAG}"
 
       - name: Set up Kustomize
-        run: |
-          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v4.5.7/kustomize_v4.5.7_linux_amd64
+        run: |-
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
 
       - name: Install gke-gcloud-auth-plugin
         run: gcloud components install kubectl
 
       - name: Deploy Image to GKE cluster
-        run: |
-          set -e
-          ./kustomize edit set image ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${GITHUB_SHA}=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${GITHUB_SHA}
+        run: |-
+          ./kustomize edit set image ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${TAG}=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/${IMAGE}:${TAG}
           ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/${DEPLOYMENT_NAME}
-
-      - name: Rollback Deployment on Failure
-        if: failure()
-        run: |
-          kubectl rollout undo deployment/${DEPLOYMENT_NAME}
-
-      - name: Verify Deployment
-        run: kubectl get services -o wide
+          kubectl get services -o wide
