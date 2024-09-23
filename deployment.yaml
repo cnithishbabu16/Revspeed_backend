@@ -51,6 +51,6 @@ spec:
     spec:
       containers:
         - name: revspeed-gke-container
-          image: REGION-docker.pkg.dev/PROJECT_ID/REPOSITORY_NAME/IMAGE:TAG  # Use your image details
+          image: us-central1-docker.pkg.dev/${{secrets.GKE_PROJECT}}/my-repo/revspeed-gke-image:1.0.0  # Use your image details
           ports:
             - containerPort: 8080
