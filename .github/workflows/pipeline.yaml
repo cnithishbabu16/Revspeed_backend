@@ -54,10 +54,11 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build --tag "${REGION}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/$IMAGE:$TAG" .
+           .
           echo "DATABASE_URL=${DATABASE_URL}" >> application.properties
           echo "DATABASE_USERNAME=${DATABASE_USERNAME}" >> application.properties
           echo "DATABASE_PASSWORD=${DATABASE_PASSWORD}" >> application.properties
+          docker build --tag "${REGION}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/$IMAGE:$TAG"
 
       - name: Include Cloud SQL Proxy in Docker Image
         run: |
