@@ -20,17 +20,17 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: DATABASE_URL
+            - name: ${{secrets.DATABASE_URL}}
               valueFrom:
                 secretKeyRef:
                   name: db-credentials
-                  key: DATABASE_URL
-            - name: DATABASE_USERNAME
+                  key: ${{secrets.DATABASE_URL}}
+            - name: ${{ secrets.DATABASE_USERNAME }}
               valueFrom:
                 secretKeyRef:
                   name: db-credentials
-                  key: DATABASE_USERNAME
-            - name: DATABASE_PASSWORD
+                  key: ${{ secrets.DATABASE_USERNAME }}
+            - name: ${{ secrets.DATABASE_PASSWORD }}
               valueFrom:
                 secretKeyRef:
                   name: db-credentials
