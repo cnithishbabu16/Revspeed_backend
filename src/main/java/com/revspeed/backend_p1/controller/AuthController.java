@@ -125,6 +125,7 @@ public class AuthController {
         user.setAddress(userRegistrationDTO.getAddress());
 
         Role defaultRole = roleRepository.findByName(ERole.ROLE_CUSTOMER);
+        System.out.println(defaultRole);
         if (defaultRole == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Default role not found"));
         }
