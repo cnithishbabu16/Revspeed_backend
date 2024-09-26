@@ -61,6 +61,7 @@ import java.util.List;
 //        userService.deleteUserProfile(email);
 //    }
 //}
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/customer")
 public class CustomerController {

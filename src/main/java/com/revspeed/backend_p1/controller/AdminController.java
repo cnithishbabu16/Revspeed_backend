@@ -67,7 +67,7 @@ import java.util.List;
 //        userService.softDeleteCustomer(id);
 //    }
 //}
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {

@@ -92,7 +92,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.Set;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
