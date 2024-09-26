@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://35.193.163.237:31000")
 @RestController
 @RequestMapping("/api/user")
 public class UserController {

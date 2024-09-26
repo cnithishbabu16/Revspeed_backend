@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://35.193.163.237:31000")
 @RestController
 @RequestMapping("/api/subscriptions")
 public class SubscriptionController {

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://35.193.163.237:31000")
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {

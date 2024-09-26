@@ -56,6 +56,7 @@
 package com.revspeed.backend_p1.config;
 
 import com.revspeed.backend_p1.config.JwtRequestFilter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
@@ -85,11 +86,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-         http.cors().and()
+         http
+                 .cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests()
                  //.requestMatchers("/api/auth/**").permitAll()
 //                 .anyRequest().permitAll()
+                 .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/customer/**").hasRole("CUSTOMER")

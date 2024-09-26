@@ -67,7 +67,7 @@ import java.util.List;
 //        userService.softDeleteCustomer(id);
 //    }
 //}
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://35.193.163.237:31000")
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
