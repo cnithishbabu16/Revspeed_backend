@@ -61,7 +61,7 @@ import java.util.List;
 //        userService.deleteUserProfile(email);
 //    }
 //}
-@CrossOrigin(origins = "http://35.193.163.237:31000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/customer")
 public class CustomerController {
