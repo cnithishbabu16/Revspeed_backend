@@ -85,16 +85,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-         http
-                .cors().and()
+         http.cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests()
                  //.requestMatchers("/api/auth/**").permitAll()
-                 .anyRequest().permitAll()
-//                .requestMatchers("/api/auth/**").permitAll()
-//                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-//                .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
-//                .anyRequest().authenticated()
+//                 .anyRequest().permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
+                .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
